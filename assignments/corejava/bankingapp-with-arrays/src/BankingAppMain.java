@@ -9,7 +9,7 @@ public class BankingAppMain {
     public static void main(String[] args) {
         AccountService accountService = new AccountServiceArrImpl();
         Scanner scanner = new Scanner(System.in);
-        boolean exit = false;  // Initialize a boolean variable to control the loop
+        boolean exit = false;
 
         while (!exit) {
 
