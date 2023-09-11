@@ -1,0 +1,2 @@
+1] [BankingAppMain] Recommend to have separate method for performing CRUD operations
+2] [BankingAppMain] Recommend to avoid using scanner.nextLine() without reading any data
