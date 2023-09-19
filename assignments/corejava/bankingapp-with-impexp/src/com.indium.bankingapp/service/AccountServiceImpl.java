@@ -166,7 +166,7 @@ public class AccountServiceImpl<T extends Account> implements AccountService<T> 
     public void importAccounts() {
         try (BufferedReader br = new BufferedReader(new FileReader("./input/input.txt"))) {
             String line;
-            int accountId = 1; // Initialize the account ID
+            int accountId = 1;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 4) {
@@ -175,8 +175,8 @@ public class AccountServiceImpl<T extends Account> implements AccountService<T> 
                     double balance = Double.parseDouble(parts[2]);
                     String type = parts[3];
                     T account = (T) new Account(accountId, accountNumber, accountHolderName, balance, type);
-                    accounts.put(accountId, account); // Add the account to the map
-                    accountId++; // Increment the account ID for the next account
+                    accounts.put(accountId, account);
+                    accountId++;
                 }
             }
             System.out.println("Accounts imported successfully!");
@@ -192,7 +192,6 @@ public class AccountServiceImpl<T extends Account> implements AccountService<T> 
         try (PrintWriter writer = new PrintWriter(new FileWriter("./output/output.txt"))) {
             for (Map.Entry<Integer, T> entry : accounts.entrySet()) {
                 Account account = entry.getValue();
-                System.out.println("Exporting Account: " + account.getAccountId()); // Debug statement
                 writer.println(account.getAccountId() + "," +
                         account.getAccountNumber() + "," +
                         account.getAccountHolderName() + "," +
