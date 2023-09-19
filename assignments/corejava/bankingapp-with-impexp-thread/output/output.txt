@@ -1,0 +1,2 @@
+0,ICIC678,Maha,7899.0,savings
+1,SBI456,Ajith,600000.0,Savings
