@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileHandler {
-    private Map<String, Account> accountMap; // Use HashMap to store accounts
+    private Map<String, Account> accountMap;
 
     public FileHandler() {
         accountMap = new HashMap<>();
@@ -37,22 +37,21 @@ public class FileHandler {
 
             try (FileReader reader = new FileReader(IMPORT_FILE_PATH);
                  BufferedReader bufferedReader = new BufferedReader(reader)) {
-
+                int accountId = 1;
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     String[] parts = line.split(",");
-                    if (parts.length == 5) {
-                        int accountId = Integer.parseInt(parts[0]);
-                        String accountNumber = parts[1];
-                        String accountHolderName = parts[2];
-                        double balance = Double.parseDouble(parts[3]);
-                        String type = parts[4];
+                    if (parts.length == 4) {
+                        String accountNumber = parts[0];
+                        String accountHolderName = parts[1];
+                        double balance = Double.parseDouble(parts[2]);
+                        String type = parts[3];
                         Account account = new Account(accountId, accountNumber, accountHolderName, balance, type);
                         accounts.put(String.valueOf(accountId), account);
+                        accountId++;
                     }
                 }
                 System.out.println("Accounts imported successfully from " + IMPORT_FILE_PATH);
-                System.out.println("Import threads used/executed: " + importThreadCount.get());
             } catch (IOException | NumberFormatException e) {
                 System.out.println("Error importing accounts from file: " + e.getMessage());
             } finally {
@@ -74,7 +73,6 @@ public class FileHandler {
                     writer.write(accountDetails + "\n");
                 }
                 System.out.println("Accounts exported successfully to " + EXPORT_FILE_PATH);
-                System.out.println("Export threads used/executed: " + exportThreadCount.get());
             } catch (IOException e) {
                 System.out.println("Error exporting accounts to file: " + e.getMessage());
             } finally {
