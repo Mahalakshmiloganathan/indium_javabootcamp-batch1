@@ -2,6 +2,7 @@ package org.example.service;
 
 
 
+import org.example.db.AccountDAO;
 import org.example.db.DatabaseConnection;
 import org.example.model.Account;
 
@@ -18,120 +19,40 @@ import java.util.Map;
 public class AccountServiceImpl implements AccountService {
     private Connection connection;
     private Map<Integer, Account> accounts = new HashMap<>();
+    private AccountDAO accountDAO;
+
+    public AccountServiceImpl(AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
 
     public AccountServiceImpl(Connection connection) {
         this.connection = DatabaseConnection.getConnection();
     }
 
+
     @Override
     public boolean createAccount(Account account) {
-        try {
-            String sql = "INSERT INTO bankaccount (account_number, account_name, account_type, balance) VALUES (?, ?, ?, ?)";
-
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setString(1, account.getAccountNumber());
-                pstmt.setString(2, account.getAccountHolderName());
-                pstmt.setString(3, account.getAccountType());
-                pstmt.setDouble(4, account.getBalance());
-
-                int rowsInserted = pstmt.executeUpdate();
-                return rowsInserted > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return accountDAO.createAccount(account);
     }
 
     @Override
     public boolean updateAccount(int id, Account account) {
-        try {
-            String sql = "UPDATE bankaccount SET account_name = ?, account_type = ?, balance = ? WHERE account_id = ?";
-
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setString(1, account.getAccountHolderName());
-                pstmt.setString(2, account.getAccountType());
-                pstmt.setDouble(3, account.getBalance());
-                pstmt.setInt(4, account.getAccountId());
-
-                int rowsUpdated = pstmt.executeUpdate();
-                return rowsUpdated > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return accountDAO.updateAccount(id, account);
     }
 
     @Override
     public boolean deleteAccount(Account account) {
-        try {
-            String sql = "DELETE FROM bankaccount WHERE account_id = ?";
-
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setInt(1, account.getAccountId());
-
-                int rowsDeleted = pstmt.executeUpdate();
-                return rowsDeleted > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return accountDAO.deleteAccount(account);
     }
 
     @Override
     public Account getAccount(int id) {
-        try {
-            String sql = "SELECT * FROM bankaccount WHERE account_id = ?";
-
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setInt(1, id);
-                ResultSet rs = pstmt.executeQuery();
-
-                if (rs.next()) {
-                    int accountId = rs.getInt("account_id");
-                    String accountNumber = rs.getString("account_number");
-                    String accountName = rs.getString("account_name");
-                    String accountType = rs.getString("account_type");
-                    double balance = rs.getDouble("balance");
-
-                    return new Account(accountId, accountNumber, accountName, balance, accountType);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return accountDAO.getAccount(id);
     }
-
 
     @Override
     public List<Account> getAllAccounts() {
-        List<Account> accounts = new ArrayList<>();
-
-        try {
-            String sql = "SELECT * FROM bankaccount";
-
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                var rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    int accountId = rs.getInt("account_id");
-                    String accountNumber = rs.getString("account_number"); // Use getString here
-                    String accountName = rs.getString("account_name");
-                    String accountType = rs.getString("account_type");
-                    double balance = rs.getDouble("balance");
-
-                    Account account = new Account(accountId, accountNumber, accountName, balance, accountType);
-                    accounts.add(account);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return accounts;
+        return accountDAO.getAllAccounts();
     }
     @Override
     public int countAccountsWithBalanceGreaterThan(double balance) {

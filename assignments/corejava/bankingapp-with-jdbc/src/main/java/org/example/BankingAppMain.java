@@ -1,6 +1,7 @@
 package org.example;
 
 
+import org.example.db.AccountDAO;
 import org.example.db.DatabaseConnection;
 import org.example.model.Account;
 import org.example.service.AccountService;
@@ -24,13 +25,13 @@ public class BankingAppMain {
             DatabaseConnection dbConnection = new DatabaseConnection(connection);
             dbConnection.createTable();
         }
-
-        AccountService accountService = new AccountServiceImpl(connection);
+        AccountDAO accountDAO = new AccountDAO(connection);
+        AccountService accountService = new AccountServiceImpl(accountDAO);
         Scanner scanner = new Scanner(System.in);
 
-        boolean exitRequested = false;
+        boolean exit = false;
 
-        while (!exitRequested) {
+        while (!exit) {
             System.out.println("Banking App Menu:");
             System.out.println("1] Add Account");
             System.out.println("2] View All Accounts");
@@ -44,7 +45,7 @@ public class BankingAppMain {
             System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -74,7 +75,7 @@ public class BankingAppMain {
                     break;
                 case 9:
                     System.out.println("Exiting the application.");
-                    exitRequested = true;
+                    exit = true;
                     scanner.close();
                     closeConnection();
                     break;
@@ -95,10 +96,8 @@ public class BankingAppMain {
         System.out.print("Enter balance: ");
         double balance = scanner.nextDouble();
 
-        // Create an Account object
         Account account = new Account(0, accountNumber, accountName, balance, accountType);
 
-        // Call accountService.createAccount(account) to create the account
         boolean success = accountService.createAccount(account);
 
         if (success) {
@@ -107,6 +106,7 @@ public class BankingAppMain {
             System.out.println("Account could not be added.");
         }
     }
+
 
     private static void viewAllAccounts(AccountService accountService) {
         List<Account> accounts = accountService.getAllAccounts();
@@ -172,7 +172,6 @@ public class BankingAppMain {
     private static void printStatistics(AccountService accountService) {
         System.out.println("Statistics Menu:");
 
-        // Execute each statistics calculation method
         int count = accountService.countAccountsWithBalanceGreaterThan(100000.0);
         System.out.println("a] No of accounts which has balance more than 1 lac: " + count);
 
