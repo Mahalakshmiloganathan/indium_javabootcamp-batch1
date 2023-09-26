@@ -1,0 +1,6 @@
+1,ICIC768,Maha,500000.0,Savings
+2,SBI678,Ram,10000.0,Salary
+3,IOB546,Yamini,600000.0,Current
+4,ICICI789, Mahalakshmi,1789000.0, Savings
+5,ICICI089, Mahalakshmi,1789000.0, Savings
+6,ICICI029, Kumar,10000.0, Salary
