@@ -178,23 +178,33 @@ public class AssociateDAOImpl implements AssociateDAO {
 
     public List<Associate> searchAssociates(String criteria, SkillService skillService) {
         List<Associate> associates = new ArrayList<>();
-        String sql = "SELECT * FROM associates WHERE (associateid = ? OR name LIKE ? OR email LIKE ? OR EXISTS (SELECT 1 FROM jsonb_array_elements_text(skills) skill WHERE skill ILIKE ?))";
+        String sql = "SELECT * FROM associates WHERE (associateid = ? OR name LIKE ? OR email LIKE ? OR location LIKE ? OR EXISTS (SELECT 1 FROM jsonb_array_elements_text(skills) skill WHERE skill ILIKE ?))";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
             int associateId = 0; // Default value in case criteria is not a valid integer
+            boolean isNumeric = false;
 
             try {
                 // Try to parse criteria as an integer
                 associateId = Integer.parseInt(criteria);
+                isNumeric = true;
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                // If parsing as an integer fails, it's not a valid ID, so set it to 0
+                // You can handle this case as needed in your query
             }
 
-            preparedStatement.setInt(1, associateId);
-            preparedStatement.setString(2, "%" + criteria + "%");
+            if (isNumeric) {
+                preparedStatement.setInt(1, associateId);
+                preparedStatement.setString(2, ""); // Empty string for non-text criteria
+            } else {
+                preparedStatement.setInt(1, 0); // Set ID to 0 for text criteria
+                preparedStatement.setString(2, "%" + criteria + "%");
+            }
+
             preparedStatement.setString(3, "%" + criteria + "%");
             preparedStatement.setString(4, "%" + criteria + "%");
+            preparedStatement.setString(5, "%" + criteria + "%");
+
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
