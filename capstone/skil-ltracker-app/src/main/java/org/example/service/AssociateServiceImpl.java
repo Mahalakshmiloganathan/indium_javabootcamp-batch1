@@ -69,7 +69,7 @@ public class AssociateServiceImpl implements AssociateService{
     public int getTotalAssociatesWithSkills(int n, SkillService skillService) {
         List<Associate> associates = listAssociates(skillService);
         return (int) associates.stream()
-                .filter(associate -> associate.getSkills().size() >= n) // Use >= instead of >
+                .filter(associate -> associate.getSkills().size() == n)
                 .count();
     }
 

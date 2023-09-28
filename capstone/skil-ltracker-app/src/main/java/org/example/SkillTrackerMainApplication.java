@@ -14,6 +14,7 @@ import org.example.service.SkillServiceImpl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class SkillTrackerMainApplication {
@@ -111,16 +112,43 @@ public class SkillTrackerMainApplication {
 
     private static void createAssociate(AssociateService associateService, SkillService skillService, Scanner scanner) {
         System.out.print("Enter associate name: ");
-        String name = scanner.nextLine();
+        String name = scanner.nextLine().trim();
+        if (name.isEmpty()) {
+            System.out.println("Name cannot be empty. Please try again.");
+            return;
+        }
+
         System.out.print("Enter associate age: ");
-        int age = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        int age;
+        while (true) {
+            try {
+                age = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid age. Please enter a valid integer.");
+            }
+        }
+
         System.out.print("Enter associate business unit: ");
-        String businessUnit = scanner.nextLine();
+        String businessUnit = scanner.nextLine().trim();
+        if (businessUnit.isEmpty()) {
+            System.out.println("Business unit cannot be empty. Please try again.");
+            return;
+        }
+
         System.out.print("Enter associate email: ");
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().trim();
+        if (email.isEmpty()) {
+            System.out.println("Email cannot be empty. Please try again.");
+            return;
+        }
+
         System.out.print("Enter associate location: ");
-        String location = scanner.nextLine();
+        String location = scanner.nextLine().trim();
+        if (location.isEmpty()) {
+            System.out.println("Location cannot be empty. Please try again.");
+            return;
+        }
 
         System.out.println("List of skills:");
         List<Skills> allSkills = skillService.listSkills();
@@ -145,8 +173,6 @@ public class SkillTrackerMainApplication {
                 String description = skill.getDescription();
                 SkillCategory category = skill.getCategory();
                 int experienceInMonths = skill.getExperienceInMonths();
-
-                // Create a new Skills object with only the desired attributes
                 Skills selectedSkill = new Skills(Id, skillName, description, category, experienceInMonths);
 
                 selectedSkills.add(selectedSkill);
@@ -171,6 +197,7 @@ public class SkillTrackerMainApplication {
             System.out.println("List of Associates:");
             for (Associate associate : associates) {
                 System.out.println(associate);
+                System.out.println(" ");
             }
         }
     }
@@ -286,7 +313,7 @@ public class SkillTrackerMainApplication {
             System.out.println("Failed to delete associate or associate not found.");
         }
 
-        return success; // Return the result for further processing if needed
+        return success;
     }
 
     private static void searchAssociates(AssociateService associateService, SkillService skillService, Scanner scanner) {
@@ -332,6 +359,7 @@ public class SkillTrackerMainApplication {
             System.out.println("List of Skills:");
             for (Skills skill : skills) {
                 System.out.println(skill);
+                System.out.println(" ");
             }
         }
     }
@@ -346,6 +374,7 @@ public class SkillTrackerMainApplication {
         if (skill != null) {
             System.out.println("Skill Details:");
             System.out.println(skill);
+
         } else {
             System.out.println("Skill not found.");
         }
@@ -412,7 +441,9 @@ public class SkillTrackerMainApplication {
     private static void keymetrics( AssociateService associateService, SkillService skillService) {
         System.out.println("Statistics Menu:");
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+        boolean exit = false;
+
+        while (!exit) {
             System.out.println("Statistics Menu:");
             System.out.println("1. Total Number of Associates");
             System.out.println("2. Total Number of Associates with More than N Skills");
@@ -424,17 +455,14 @@ public class SkillTrackerMainApplication {
             System.out.println("8. Skill Wise Associate Count");
             System.out.println("9. Top N Skills");
             System.out.println("10. Skill Wise Avg Associate Experience");
-            System.out.println("0. Exit");
+            System.out.println("11. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
+
             switch (choice) {
-                case 0:
-                    System.out.println("Exiting...");
-                    scanner.close();
-                    System.exit(0);
                 case 1:
                     displayTotalAssociates(associateService,skillService);
                     break;
@@ -465,13 +493,16 @@ public class SkillTrackerMainApplication {
                 case 10:
                     displaySkillWiseAvgAssociateExperience(associateService,skillService);
                     break;
+                case 11:
+                    System.out.println("Returning to the Main Menu.");
+                    exit = true;
+                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
         }
     }
 
-    // Separate methods for CRUD operations
     private static void displayTotalAssociates(AssociateService associateService, SkillService skillService) {
         int totalAssociatesCount = associateService.getTotalAssociates(skillService);
         System.out.println("Total Number of Associates: " + totalAssociatesCount);
