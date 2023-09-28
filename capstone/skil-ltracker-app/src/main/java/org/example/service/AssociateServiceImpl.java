@@ -57,69 +57,6 @@ public class AssociateServiceImpl implements AssociateService{
         return associateDAO.searchAssociates(criteria,skillService);
     }
 
-    @Override
-    public void importAccounts() {
-        try (BufferedReader br = new BufferedReader(new FileReader("./input/input.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 4) {
-                     String name = parts[0];
-                     int age = Integer.parseInt(parts[1]);
-                     String businessUnit = parts[2];
-                     String email = parts[3];
-                     String location = parts[4];
-                    List<Skills> skills = new ArrayList<>();
-
-                    int associateid = generateNewAccountId();
-
-                    addAssociate(new Associate(associateid, name, age, businessUnit, email, location, skills));
-                }
-            }
-            System.out.println("Accounts imported successfully!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error while importing accounts.");
-        }
-    }
-
-
-    private int generateNewAccountId() {
-        int newAssociateId = 1;
-
-        try {
-            String sql = "SELECT MAX(associate_id) FROM bankaccount";
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    newAssociateId = rs.getInt(1) + 1;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return newAssociateId;
-    }
-
-    @Override
-    public void exportAccounts(SkillService skillService) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("./output/output.txt"))) {
-            List<Associate> associates = listAssociates(skillService);
-            for (Associate associate : associates) {
-                writer.println(associate.getId() + "," +
-                        associate.getName() + "," +
-                        associate.getAge() + "," +
-                        associate.getBusinessUnit() + "," +
-                        associate.getEmail() + "," +
-                        associate.getLocation() + "," +
-                        associate.getSkills());
-            }
-            System.out.println("Export completed successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public int getTotalAssociates(SkillService skillService) {

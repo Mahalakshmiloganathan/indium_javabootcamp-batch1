@@ -53,9 +53,7 @@ public class SkillTrackerMainApplication {
             System.out.println("10] Update Skill");
             System.out.println("11] Delete Skill");
             System.out.println("12] Key Metrics");
-            System.out.println("13] Import Account");
-            System.out.println("14] Export Account");
-            System.out.println("15] Exit");
+            System.out.println("13] Exit");
             System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
@@ -100,12 +98,6 @@ public class SkillTrackerMainApplication {
                     keymetrics(associateService,skillService);
                     break;
                 case 13:
-                    importAccounts(associateService);
-                    break;
-                case 14:
-                    exportAccounts(associateService,skillService);
-                    break;
-                case 15:
                     System.out.println("Exiting the application.");
                     exit = true;
                     scanner.close();
@@ -550,21 +542,6 @@ public class SkillTrackerMainApplication {
         Map<String, Double> skillWiseAvgAssociateExperience = associateService.getSkillWiseAvgAssociateExperience(skillService);
         System.out.println("Skill-wise average associate experience: " + skillWiseAvgAssociateExperience);
     }
-
-
-
-
-    private static void importAccounts(AssociateService associateService) {
-        associateService.importAccounts();
-        System.out.println("Accounts imported successfully!");
-    }
-
-    private static void exportAccounts(AssociateService associateService, SkillService skillService) {
-        associateService.exportAccounts(skillService);
-        System.out.println("Accounts exported successfully!");
-    }
-
-
 
 
     private static void closeConnection(Connection connection) {

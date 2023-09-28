@@ -13,10 +13,6 @@ public interface AssociateService {
     List<Associate> listAssociates(SkillService skillService);
     Associate findAssociateById(int associateId, SkillService skillService);
      List<Associate> searchAssociates(String criteria, SkillService skillService);
-    void importAccounts();
-
-    void exportAccounts(SkillService skillService);
-
     int getTotalAssociates(SkillService skillService);
 
     // Total No of Associates who has more than N skills

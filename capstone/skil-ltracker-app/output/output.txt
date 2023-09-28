@@ -1,1 +1,0 @@
-1,Maha,23,IT,maha@gmail.com,Chennai,[Skills{skillid=1, name='JAVA', description='Programming Language', category=PRIMARY, experienceInMonths=10}]
