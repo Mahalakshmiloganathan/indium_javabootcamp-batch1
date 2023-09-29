@@ -5,7 +5,7 @@ import org.example.service.SkillService;
 
 import java.util.List;
 
-public interface AssociateDAO {
+public interface AssociateDao {
     void addAssociate(Associate associate);
 
     void editAssociate(int associateId, Associate updatedAssociate);

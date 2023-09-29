@@ -1,15 +1,15 @@
 package org.example.service;
 
 
-import org.example.DAO.SkillDAOImpl;
+import org.example.DAO.SkillDaoImpl;
 import org.example.model.Skills;
 
 import java.util.List;
 
 public class SkillServiceImpl implements SkillService {
-    private SkillDAOImpl skillDAO;
+    private SkillDaoImpl skillDAO;
 
-    public SkillServiceImpl(SkillDAOImpl skillDAO) {
+    public SkillServiceImpl(SkillDaoImpl skillDAO) {
         this.skillDAO = skillDAO;
     }
 

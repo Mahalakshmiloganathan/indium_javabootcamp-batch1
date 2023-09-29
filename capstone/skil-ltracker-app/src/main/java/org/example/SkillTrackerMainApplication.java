@@ -1,8 +1,8 @@
 package org.example;
 
-import org.example.DAO.AssociateDAOImpl;
+import org.example.DAO.AssociateDaoImpl;
 import org.example.db.DatabaseConnection;
-import org.example.DAO.SkillDAOImpl;
+import org.example.DAO.SkillDaoImpl;
 import org.example.enums.SkillCategory;
 import org.example.model.Associate;
 import org.example.model.Skills;
@@ -14,7 +14,6 @@ import org.example.service.SkillServiceImpl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class SkillTrackerMainApplication {
@@ -29,8 +28,8 @@ public class SkillTrackerMainApplication {
         }
 
         // Initialize your DAOs here
-        AssociateDAOImpl associateDAO = new AssociateDAOImpl(connection);
-        SkillDAOImpl skillDAO = new SkillDAOImpl(connection);
+        AssociateDaoImpl associateDAO = new AssociateDaoImpl(connection);
+        SkillDaoImpl skillDAO = new SkillDaoImpl(connection);
 
         // Initialize your services with the DAOs
         AssociateService associateService = new AssociateServiceImpl(associateDAO);
@@ -220,7 +219,7 @@ public class SkillTrackerMainApplication {
     private static void updateAssociate(AssociateService associateService, SkillService skillService, Scanner scanner) {
         System.out.print("Enter associate ID to update: ");
         int associateId = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        scanner.nextLine();
 
         Associate existingAssociate = associateService.findAssociateById(associateId, skillService);
 
@@ -233,7 +232,7 @@ public class SkillTrackerMainApplication {
 
             System.out.print("Enter new associate age (or 0 to keep the current age): ");
             int newAge = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            scanner.nextLine();
             if (newAge > 0) {
                 existingAssociate.setAge(newAge);
             }

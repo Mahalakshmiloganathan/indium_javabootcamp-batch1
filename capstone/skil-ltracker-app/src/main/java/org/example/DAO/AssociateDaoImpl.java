@@ -3,7 +3,6 @@ package org.example.DAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.DAO.AssociateDAO;
 import org.example.model.Associate;
 import org.example.model.Skills;
 import org.example.service.SkillService;
@@ -14,10 +13,10 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssociateDAOImpl implements AssociateDAO {
+public class AssociateDaoImpl implements AssociateDao {
     private Connection connection;
 
-    public AssociateDAOImpl(Connection connection) {
+    public AssociateDaoImpl(Connection connection) {
         this.connection = connection;
     }
 
@@ -31,7 +30,6 @@ public class AssociateDAOImpl implements AssociateDAO {
             preparedStatement.setString(4, associate.getEmail());
             preparedStatement.setString(5, associate.getLocation());
 
-            // Convert the list of skill IDs to a JSON array string
             List<Skills> skillsList = associate.getSkills();
             String skillsAsJsonArray = new ObjectMapper().writeValueAsString(skillsList);
 
@@ -39,13 +37,12 @@ public class AssociateDAOImpl implements AssociateDAO {
 
             preparedStatement.executeUpdate();
 
-            // Retrieve the generated keys (including the auto-generated id)
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                associate.setId(generatedKeys.getInt(1)); // Set the generated id
+                associate.setId(generatedKeys.getInt(1));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Create Associate");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -64,11 +61,9 @@ public class AssociateDAOImpl implements AssociateDAO {
             preparedStatement.setString(5, updatedAssociate.getLocation());
             List<Skills> skills = updatedAssociate.getSkills();
 
-// Use ObjectMapper to convert the skills list to a JSON string
             ObjectMapper objectMapper = new ObjectMapper();
             String skillsJson = objectMapper.writeValueAsString(skills);
 
-// Set the JSON string in the PreparedStatement
             preparedStatement.setObject(6, skillsJson, Types.OTHER);
             Date utilDate = updatedAssociate.getUpdateTime();
             java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
@@ -76,7 +71,7 @@ public class AssociateDAOImpl implements AssociateDAO {
             preparedStatement.setInt(8, associateId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Update Associate");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -90,7 +85,7 @@ public class AssociateDAOImpl implements AssociateDAO {
             preparedStatement.setInt(1, associateId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Delete Associate");
         }
     }
 
@@ -108,10 +103,9 @@ public class AssociateDAOImpl implements AssociateDAO {
                 String email = resultSet.getString("email");
                 String location = resultSet.getString("location");
 
-                // Retrieve the skills as a JSON array string from the database
+
                 String skillsAsJsonArray = resultSet.getString("skills");
 
-                // Parse the JSON array string to a list of Skills objects
                 ObjectMapper objectMapper = new ObjectMapper();
                 List<Skills> selectedSkills = new ArrayList<>();
 
@@ -129,7 +123,7 @@ public class AssociateDAOImpl implements AssociateDAO {
                 associates.add(new Associate(associateid, name, age, businessUnit, email, location, selectedSkills));
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Get All Associate");
         }
         return associates;
     }
@@ -168,7 +162,7 @@ public class AssociateDAOImpl implements AssociateDAO {
                 }
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Get Associate By Id");
         }
         return null;
     }
@@ -185,12 +179,11 @@ public class AssociateDAOImpl implements AssociateDAO {
             boolean isNumeric = false;
 
             try {
-                // Try to parse criteria as an integer
+
                 associateId = Integer.parseInt(criteria);
                 isNumeric = true;
             } catch (NumberFormatException e) {
-                // If parsing as an integer fails, it's not a valid ID, so set it to 0
-                // You can handle this case as needed in your query
+                System.out.println("Error Occured While Search Associate");
             }
 
             if (isNumeric) {
@@ -217,7 +210,6 @@ public class AssociateDAOImpl implements AssociateDAO {
 
                     String skillsAsJsonArray = resultSet.getString("skills");
 
-                    // Parse the JSON array string to a list of Skills objects
                     ObjectMapper objectMapper = new ObjectMapper();
                     List<Skills> selectedSkills = new ArrayList<>();
 
@@ -236,7 +228,7 @@ public class AssociateDAOImpl implements AssociateDAO {
                 }
             }
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Search Associate");
         }
         return associates;
     }

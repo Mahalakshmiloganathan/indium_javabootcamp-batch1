@@ -1,25 +1,19 @@
 package org.example.DAO;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.enums.SkillCategory;
-import org.example.model.Associate;
 import org.example.model.Skills;
 import org.example.service.SkillService;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class SkillDAOImpl implements SkillDAO {
+public class SkillDaoImpl implements SkillDao {
     private SkillService skillService;
 
     private Connection connection;
 
-    public SkillDAOImpl(Connection connection) {
+    public SkillDaoImpl(Connection connection) {
         this.connection = connection;
     }
 
@@ -39,7 +33,7 @@ public class SkillDAOImpl implements SkillDAO {
                 skill.setSkillid(generatedKeys.getInt(1));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Create Skill");
         }
     }
 
@@ -59,7 +53,7 @@ public class SkillDAOImpl implements SkillDAO {
                 skills.add(new Skills(id, name, description, skillCategory, experienceInMonths));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Get All Skill");
         }
         return skills;
     }
@@ -81,7 +75,7 @@ public class SkillDAOImpl implements SkillDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Get Skill By Id");
         }
         return null;
     }
@@ -97,7 +91,7 @@ public class SkillDAOImpl implements SkillDAO {
             preparedStatement.setInt(5, skill.getSkillid()); // Assuming skillId is the primary key
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Update SKill");
         }
     }
 
@@ -108,7 +102,7 @@ public class SkillDAOImpl implements SkillDAO {
             preparedStatement.setInt(1, skillId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error Occured While Delete Skill");
         }
         return true;
     }

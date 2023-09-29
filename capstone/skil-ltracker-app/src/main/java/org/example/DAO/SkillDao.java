@@ -4,7 +4,7 @@ import org.example.model.Skills;
 
 import java.util.List;
 
-public interface SkillDAO {
+public interface SkillDao {
 
     void addSkill(Skills skill);
 

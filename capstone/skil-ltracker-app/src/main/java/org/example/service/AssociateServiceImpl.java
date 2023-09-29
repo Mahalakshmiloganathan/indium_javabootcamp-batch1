@@ -1,27 +1,23 @@
 package org.example.service;
 
-import org.example.DAO.AssociateDAOImpl;
+import org.example.DAO.AssociateDaoImpl;
 import org.example.enums.SkillCategory;
 import org.example.model.Associate;
 import org.example.model.Skills;
 
-import java.io.*;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AssociateServiceImpl implements AssociateService{
 
     private Connection connection;
-    private AssociateDAOImpl associateDAO;
+    private AssociateDaoImpl associateDAO;
 
 
 
 
-    public AssociateServiceImpl(AssociateDAOImpl associateDAO) {
+    public AssociateServiceImpl(AssociateDaoImpl associateDAO) {
         this.associateDAO = associateDAO;
     }
 
